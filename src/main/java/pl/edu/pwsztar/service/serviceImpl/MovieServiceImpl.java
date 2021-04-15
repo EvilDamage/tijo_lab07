@@ -3,6 +3,7 @@ package pl.edu.pwsztar.service.serviceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConverterNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.edu.pwsztar.domain.dto.*;
 import pl.edu.pwsztar.domain.entity.Movie;
@@ -39,12 +40,12 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<MovieDto> findAll() {
         List<Movie> movies = movieRepository.findByOrderByYearDesc();
-        return movieListMapper.mapToDto(movies);
+        return movieListMapper.convert(movies);
     }
 
     @Override
     public void creatMovie(CreateMovieDto createMovieDto) {
-        Movie movie = movieMapper.mapToEntity(createMovieDto);
+        Movie movie = movieMapper.convert(createMovieDto);
         movieRepository.save(movie);
     }
 
@@ -61,7 +62,7 @@ public class MovieServiceImpl implements MovieService {
             return new DetailsMovieDto();
         }
 
-        return movieDetailsMapper.mapToDto(movie);
+        return movieDetailsMapper.convert(movie);
     }
 
     @Override
@@ -74,11 +75,20 @@ public class MovieServiceImpl implements MovieService {
         Movie movie = movieRepository.findOneByMovieId(movieId);
 
         if(movie != null) {
-            movie.setImage(updateMovieDto.getImage());
-            movie.setTitle(updateMovieDto.getTitle());
-            movie.setVideoId(updateMovieDto.getVideoId());
-            movie.setYear(updateMovieDto.getYear());
-            movieRepository.save(movie);
+            Movie movieBuilder = new Movie.Builder()
+                    .movieId(movie.getMovieId())
+                    .videoId(updateMovieDto.getVideoId())
+                    .image(updateMovieDto.getImage())
+                    .title(updateMovieDto.getTitle())
+                    .year(updateMovieDto.getYear())
+                    .build() ;
+
+//            movie.setImage(updateMovieDto.getImage());
+//            movie.setTitle(updateMovieDto.getTitle());
+//            movie.setVideoId(updateMovieDto.getVideoId());
+//            movie.setYear(updateMovieDto.getYear());
+
+            movieRepository.save(movieBuilder);
         }
     }
 }

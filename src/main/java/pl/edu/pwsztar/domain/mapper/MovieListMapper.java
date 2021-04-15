@@ -8,23 +8,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class MovieListMapper {
+public class MovieListMapper implements Converter <List<MovieDto>, List<Movie>> {
 
-    public List<MovieDto> mapToDto(List<Movie> movies) {
-        List<MovieDto> moviesDto = new ArrayList<>();
+    @Override
+    public List <MovieDto> convert(List <Movie> movies) {
+        List <MovieDto> moviesDto = new ArrayList <>();
 
-        for(Movie movie: movies) {
-            MovieDto movieDto = new MovieDto();
-
-            movieDto.setMovieId(movie.getMovieId());
-            movieDto.setTitle(movie.getTitle());
-            movieDto.setImage(movie.getImage());
-            movieDto.setYear(movie.getYear());
-
+        for (Movie movie : movies) {
+            MovieDto movieDto = new MovieDto.Builder()
+                    .movieId(movie.getMovieId())
+                    .title(movie.getTitle())
+                    .image(movie.getImage())
+                    .year(movie.getYear())
+                    .build();
             moviesDto.add(movieDto);
 
         }
 
         return moviesDto;
     }
+
+//    public List <MovieDto> mapToDto(List <Movie> movies) {
+//        List <MovieDto> moviesDto = new ArrayList <>();
+//
+//        for (Movie movie : movies) {
+//            MovieDto movieDto = new MovieDto.Builder()
+//                    .movieId(movie.getMovieId())
+//                    .title(movie.getTitle())
+//                    .image(movie.getImage())
+//                    .year(movie.getYear())
+//                    .build();
+//
+////            movieDto.setMovieId(movie.getMovieId());
+////            movieDto.setTitle(movie.getTitle());
+////            movieDto.setImage(movie.getImage());
+////            movieDto.setYear(movie.getYear());
+//
+//            moviesDto.add(movieDto);
+//
+//        }
+//
+//        return moviesDto;
+//    }
 }

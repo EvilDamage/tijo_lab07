@@ -36,4 +36,5 @@ public class CreateMovieDto implements Serializable {
                 ", videoId='" + videoId + '\'' +
                 '}';
     }
+
 }
